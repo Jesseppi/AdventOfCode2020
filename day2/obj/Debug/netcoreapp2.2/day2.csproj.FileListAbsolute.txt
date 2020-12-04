@@ -9,3 +9,15 @@
 /Users/jessec/git/AdventOfCode/day2/bin/Debug/netcoreapp2.2/day2.pdb
 /Users/jessec/git/AdventOfCode/day2/obj/Debug/netcoreapp2.2/day2.dll
 /Users/jessec/git/AdventOfCode/day2/obj/Debug/netcoreapp2.2/day2.pdb
+/Users/jessec/git/AdventOfCode2020/day2/bin/Debug/netcoreapp2.2/day2.deps.json
+/Users/jessec/git/AdventOfCode2020/day2/bin/Debug/netcoreapp2.2/day2.runtimeconfig.json
+/Users/jessec/git/AdventOfCode2020/day2/bin/Debug/netcoreapp2.2/day2.runtimeconfig.dev.json
+/Users/jessec/git/AdventOfCode2020/day2/bin/Debug/netcoreapp2.2/day2.dll
+/Users/jessec/git/AdventOfCode2020/day2/bin/Debug/netcoreapp2.2/day2.pdb
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.csprojAssemblyReference.cache
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.csproj.CoreCompileInputs.cache
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.AssemblyInfoInputs.cache
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.AssemblyInfo.cs
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.dll
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.pdb
+/Users/jessec/git/AdventOfCode2020/day2/obj/Debug/netcoreapp2.2/day2.genruntimeconfig.cache

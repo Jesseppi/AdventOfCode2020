@@ -692,11 +692,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jessec/git/AdventOfCode/day2/day2.csproj",
+      "projectUniqueName": "/Users/jessec/git/AdventOfCode2020/day2/day2.csproj",
       "projectName": "day2",
-      "projectPath": "/Users/jessec/git/AdventOfCode/day2/day2.csproj",
+      "projectPath": "/Users/jessec/git/AdventOfCode2020/day2/day2.csproj",
       "packagesPath": "/Users/jessec/.nuget/packages/",
-      "outputPath": "/Users/jessec/git/AdventOfCode/day2/obj/",
+      "outputPath": "/Users/jessec/git/AdventOfCode2020/day2/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
@@ -712,6 +712,7 @@
       },
       "frameworks": {
         "netcoreapp2.2": {
+          "targetAlias": "netcoreapp2.2",
           "projectReferences": {}
         }
       },
@@ -723,6 +724,7 @@
     },
     "frameworks": {
       "netcoreapp2.2": {
+        "targetAlias": "netcoreapp2.2",
         "dependencies": {
           "Microsoft.NETCore.App": {
             "suppressParent": "All",
@@ -732,10 +734,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.100/RuntimeIdentifierGraph.json"
       }
     }
   }
