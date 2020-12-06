@@ -96,12 +96,6 @@ namespace day5
 
         public static class FlightData
         {
-        //     public static List<string> Seats = new List<string>
-        //     {
-        //         "FBFBBFFRLR",
-        //     };
-        // }
-
             public static List<string> Seats = new List<string>
             {
                 "FFFBBFBLLR",
