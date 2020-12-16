@@ -22,9 +22,13 @@ namespace day12
         {
             public string orientaion { get; set; } = East;
 
-            public int yAxis { get; set; } = 0;
+            public int waypointYAxis { get; set; } = 1;
 
-            public int xAxis { get; set; } = 0;
+            public int waypointXAxis { get; set; } = 10;
+
+            public int shipYAxis { get; set; } = 0;
+
+            public int shipXAxis { get; set; } = 0;
         }
 
         public static class JourneyHelper
@@ -41,12 +45,12 @@ namespace day12
                     GetNewPosition(position, moveTupple);
                 }
 
-                return Math.Abs(position.yAxis) + Math.Abs(position.xAxis);
+                return Math.Abs(position.shipYAxis) + Math.Abs(position.shipXAxis);
             }
 
             public static (string, int) GetMoveTuple(string move)
             {
-                var direction = Regex.Match(move,@"[^0-9]").Value;
+                var direction = Regex.Match(move, @"[^0-9]").Value;
                 var numerical = move.Split(direction)[1];
                 return (direction, Int32.Parse(numerical));
             }
@@ -63,24 +67,26 @@ namespace day12
                     MoveForward(position, move);
                     return;
                 }
-                Move(position,move);
+                Move(position, move);
 
 
             }
 
-            public static void Move(Position position, (string, int) move){
-                if (move.Item1 == North) position.yAxis += move.Item2;
-                if (move.Item1 == South) position.yAxis -= move.Item2;
-                if (move.Item1 == East) position.xAxis += move.Item2;
-                if (move.Item1 == West) position.xAxis -= move.Item2;
+            public static void Move(Position position, (string, int) move)
+            {
+                if (move.Item1 == North) position.waypointYAxis += move.Item2;
+                if (move.Item1 == South) position.waypointYAxis -= move.Item2;
+                if (move.Item1 == East) position.waypointXAxis += move.Item2;
+                if (move.Item1 == West) position.waypointXAxis -= move.Item2;
             }
 
             public static void MoveForward(Position position, (string, int) move)
             {
-                if (position.orientaion == North) position.yAxis += move.Item2;
-                if (position.orientaion == South) position.yAxis -= move.Item2;
-                if (position.orientaion == East) position.xAxis += move.Item2;
-                if (position.orientaion == West) position.xAxis -= move.Item2;
+                var verticalMove = position.waypointYAxis * move.Item2;
+                var horizontalMove = position.waypointXAxis * move.Item2;
+
+                position.shipYAxis += verticalMove;
+                position.shipXAxis += horizontalMove;
             }
 
             public static void RotateOrientation(Position position, (string, int) move)
@@ -90,12 +96,35 @@ namespace day12
                 var numberOfSteps = move.Item2 / 90;
                 var rotation = move.Item1 == "L" ? currentIndex - numberOfSteps : currentIndex + numberOfSteps;
                 if (numberOfSteps == 4) return;
-                var newIndex = 0;
-                if (rotation >= 0 && rotation <= 3) newIndex = rotation;
-                if (rotation < 0) newIndex = 4 - Math.Abs(rotation);
-                if (rotation > 3) newIndex =  Math.Abs(rotation) - 4;
-                Console.WriteLine(newIndex);
-                position.orientaion = positionArray[newIndex];
+
+                var newYAxis = 0;
+                var newXAxis = 0;
+
+                if (numberOfSteps == 1 || numberOfSteps == 3)
+                {
+                    newXAxis = position.waypointYAxis;
+                    newYAxis = position.waypointXAxis;
+
+                    if (move.Item1 == "R")
+                    {
+                        if (numberOfSteps == 1) newYAxis = newYAxis * -1;
+                        if (numberOfSteps == 3) newXAxis = newXAxis * -1;
+                    }
+                    if (move.Item1 == "L")
+                    {
+                        if (numberOfSteps == 1) newXAxis = newXAxis * -1;
+                        if (numberOfSteps == 3) newYAxis = newYAxis * -1;
+                    }
+
+                }
+                if (numberOfSteps == 2)
+                {
+                    newYAxis = position.waypointYAxis * -1;
+                    newXAxis = position.waypointXAxis * -1;
+                }
+
+                position.waypointXAxis = newXAxis;
+                position.waypointYAxis = newYAxis;
             }
         }
 
@@ -103,6 +132,16 @@ namespace day12
         {
 
             public static List<string> Test = new List<string>
+            {
+                "F10",
+                "N3",
+                "F7",
+                "R90",
+                "F11",
+            };
+
+
+            public static List<string> Test2 = new List<string>
             {
                 "F10",
                 "N3",
