@@ -47,11 +47,11 @@ namespace day11
                         {
                             var item = seatingPlan.SeatLayout[row][column];
                             newSeatingLayout[row].Add(item);
-                            var newValue = GetSeatValue(seatingPlan.SeatLayout, row, column, 4);
+                            var newValue = GetSeatValue(seatingPlan.SeatLayout, row, column, 5);
                             if (item != newValue.Item1) seatingPlan.layoutHasChanged = true;
                             newSeatingLayout[row][column] = newValue.Item1;
                         }
-                        Console.WriteLine();
+                        //Console.WriteLine();
                     }
                     Console.WriteLine();
                     seatingPlan.SeatLayout = newSeatingLayout;
@@ -99,17 +99,21 @@ namespace day11
                 {
                     foreach (var column in ColumnsToCheck)
                     {
+                        var direction = GetDirection(currentRow, currentColumn, row, column);
                         if (row == currentRow && column == currentColumn) continue;
                         checkCells++;
                         //Console.WriteLine($"(row:{row} column:{column})");
                         var seatType = seats[row][column];
-                        if (seatType == '.') continue;
+                        if (seatType == '.') {
+                            var deeperseatType = GoDeeper(seats,direction,row,column);
+                            seatType = deeperseatType;
+                        }
                         if (seatType == '#') occupiedSeatCounter++;
                         if (seatType == 'L') emptySeatCount++;
                     }
                 }
 
-                Console.Write(checkCells);
+                //Console.Write(checkCells);
                 if (currentSeatType == 'L' && occupiedSeatCounter == 0) return ('#', emptySeatCount);
                 if (currentSeatType == '#' && occupiedSeatCounter >= rule) return ('L', emptySeatCount);
                 return (currentSeatType, emptySeatCount);
@@ -119,6 +123,87 @@ namespace day11
             {
                 var rowsToCheck = Enumerable.Range(currentCell - 1, 3).Where(x => x >= 0 && x < cellCount).ToList();
                 return rowsToCheck;
+            }
+
+            public enum Direction {
+                UP,
+                DOWN,
+                LEFT,
+                LEFTUP,
+                LEFTDOWN,
+                RIGHT,
+                RIGHTUP,
+                RIGHTDOWN,
+                NEUTRAL
+            }
+
+            public static Direction GetDirection(int currentRow, int currentColumn, int row, int column){
+                if(row < currentRow ){
+                    if(column <  currentColumn) return Direction.LEFTUP;
+                    if (column > currentColumn) return Direction.RIGHTUP;
+                    return Direction.UP;
+                }
+
+                if(row == currentRow){
+                    if (column < currentColumn) return Direction.LEFT;
+                    if (column > currentColumn) return Direction.RIGHT;
+                }
+
+                if (row > currentRow)
+                {
+                    if (column < currentColumn) return Direction.LEFTDOWN;
+                    if (column > currentColumn) return Direction.RIGHTDOWN;
+                    return Direction.DOWN;
+                }
+                return Direction.NEUTRAL;
+            }
+
+            public static char GoDeeper(List<List<char>> seats, Direction direction,int row, int colum){
+                var newRow = row;
+                var newColumn = colum;
+                if(direction == Direction.UP ){
+                    newRow--;
+                }
+                if (direction == Direction.DOWN)
+                {
+                    newRow++;
+                }
+                if (direction == Direction.LEFT)
+                {
+                    newColumn--;
+                }
+                if (direction == Direction.LEFTUP)
+                {
+                    newColumn--;
+                    newRow--;
+                }
+                if (direction == Direction.LEFTDOWN)
+                {
+                    newColumn--;
+                    newRow++;
+                }
+                if (direction == Direction.RIGHT)
+                {
+                    newColumn++;
+                }
+                if (direction == Direction.RIGHTUP)
+                {
+                    newColumn++;
+                    newRow--;
+                }
+                if (direction == Direction.RIGHTDOWN)
+                {
+                    newColumn++;
+                    newRow++;
+                }
+
+                if( newRow < 0 || newRow >= seats.Count  || newColumn < 0 || newColumn >= seats[0].Count ){
+                    return '.';
+                }
+                var seatType = seats[newRow][newColumn];
+
+                if (seatType == '.') seatType = GoDeeper(seats, direction, newRow, newColumn);
+                return seatType;
             }
         }
         public static class SeatLayout
