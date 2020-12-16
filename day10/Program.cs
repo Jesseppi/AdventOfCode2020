@@ -52,6 +52,42 @@ namespace day10
                 return singleJolts * tripleJolts;
 
             }
+
+            public static int GetPathNumbers(List<int> bag){
+                var maxValue = bag.Max();
+                var maxIndex = maxValue + 1;
+                var sortedArray = new int[maxIndex];
+                bag.ForEach(item => sortedArray[item] = item);
+                var singleJolts = 1;
+                var doubleJolts = 0;
+                var tripleJolts = 1;
+
+                var chain = new List<int>();
+
+                foreach (var adapter in bag)
+                {
+                    var currentAdapter = sortedArray[nextAdapter];
+                    var maxAdapter = currentAdapter + 3;
+
+                    if (sortedArray[currentAdapter + 1] != 0)
+                    {
+                        singleJolts++;
+                        continue;
+                    }
+                    if (maxAdapter <= maxValue && sortedArray[maxAdapter] != 0)
+                    {
+                        tripleJolts++;
+                        nextAdapter += 3;
+                    };
+                    continue;
+                }
+
+                chain.ForEach(x => Console.Write(x + " "));
+                Console.WriteLine();
+                Console.WriteLine(singleJolts);
+                Console.WriteLine(tripleJolts);
+                return singleJolts * tripleJolts;
+            }
         }
 
 
