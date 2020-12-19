@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace day14
@@ -10,27 +11,28 @@ namespace day14
         static void Main(string[] args)
         {
             var operations = GetDataChunks(BitMask.Commands);
-            var value = GetValue(operations);
+            var value = GetProgramSum(operations);
 
             Console.WriteLine(value);
         }
 
-        public static long GetValue(Operations operations)
+        public static long GetProgramSum(Operations operations)
         {
-            var memoryBlock = new Dictionary<int, long>();
+            var v1MemoryBlock = new Dictionary<int, long>();
+            var v2MemoryBlock = new Dictionary<int, long>();
 
             foreach (var operation in operations.OperationList)
             {
                 foreach (var command in operation.Operations)
                 {
-                    var value = GetMaskedValue(command, operation.Mask);
-                    if (memoryBlock.ContainsKey(value.Item1)) { memoryBlock[value.Item1] = value.Item2; }
-                    else { memoryBlock.Add(value.Item1, value.Item2); }
+                    var value = GetMaskedValueV1(command, operation.V1Mask);
+                    if (v1MemoryBlock.ContainsKey(value.Item1)) { v1MemoryBlock[value.Item1] = value.Item2; }
+                    else { v1MemoryBlock.Add(value.Item1, value.Item2); }
                 }
             }
 
             long sum = 0;
-            foreach (var item in memoryBlock)
+            foreach (var item in v1MemoryBlock)
             {
                 sum += item.Value;
             }
@@ -39,7 +41,7 @@ namespace day14
         }
 
 
-        public static (int, long) GetMaskedValue((int, long) command, Dictionary<int, int> mask)
+        public static (int, long) GetMaskedValueV1((int, long) command, Dictionary<int, int> mask)
         {
 
             var binaryValue = Convert.ToString(command.Item2, 2);
@@ -54,6 +56,26 @@ namespace day14
             var base2 = "1" + base36.Split("1", 2)[1];
             return (command.Item1, Convert.ToInt64(base2, 2));
         }
+
+        public static (int, long) GetMaskedValueV2((int, long) command, Dictionary<int, char> mask)
+        {
+
+            var binaryValue = Convert.ToString(command.Item2, 2);
+            var paddedValue = binaryValue.PadLeft(36, '0').ToCharArray();
+
+            var intValues = mask.Where(x => x.Value == '1').Select(x => (x.Key, Int32.Parse(x.Value.ToString()))).ToList();
+            var xValue = mask.Where(x => x.Value == 'X').Select(x => (x.Key,x.Value)).ToList();
+
+            foreach (var item in mask)
+            {
+                paddedValue[item.Key] = Convert.ToChar(item.Value.ToString());
+            }
+
+            var base36 = new string(paddedValue);
+            var base2 = "1" + base36.Split("1", 2)[1];
+            return (command.Item1, Convert.ToInt64(base2, 2));
+        }
+
 
         public static Operations GetDataChunks(string data)
         {
@@ -81,7 +103,8 @@ namespace day14
                             operation = string.Empty;
                             continue;
                         }
-                        dataChunk.Mask = GetMask(line);
+                        dataChunk.V1Mask = GetV1Mask(line);
+                        dataChunk.V2Mask = GetV2Mask(line);
                         continue;
                     }
                     var memLocation = line.Split("=")[0].Split("[")[1].Split("]")[0];
@@ -97,7 +120,7 @@ namespace day14
 
         }
 
-        public static Dictionary<int, int> GetMask(string line)
+        public static Dictionary<int, int> GetV1Mask(string line)
         {
             var maskValues = new Dictionary<int, int>();
             var maskValue = line;
@@ -115,6 +138,20 @@ namespace day14
             return maskValues;
         }
 
+        public static Dictionary<int, char> GetV2Mask(string line)
+        {
+            var maskValues = new Dictionary<int, char>();
+            var maskValue = line;
+
+            for (var character = 0; character < maskValue.Length; character++)
+            {
+                    var value = maskValue[character];
+                    maskValues.Add(character, value);
+            }
+
+            return maskValues;
+        }
+
         public class Operations
         {
             public List<DataChunk> OperationList { get; set; } = new List<DataChunk>();
@@ -122,7 +159,8 @@ namespace day14
 
         public class DataChunk
         {
-            public Dictionary<int, int> Mask { get; set; }
+            public Dictionary<int, int> V1Mask { get; set; }
+            public Dictionary<int, char> V2Mask { get; set; }
 
             public List<(int, long)> Operations { get; set; } = new List<(int, long)>();
 
